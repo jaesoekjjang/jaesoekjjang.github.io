@@ -25,3 +25,10 @@ export const formatKorDate = (
       day: "numeric",
     }
   );
+
+export const insertBetween = <T>(arr: T[], separator: T): T[] =>
+  arr.reduce((acc, cur) => {
+    if (arr.length) acc.push(separator, cur);
+    else acc.push(cur);
+    return acc;
+  }, [] as T[]);

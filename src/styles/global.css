@@ -15,9 +15,9 @@
 
   --code-background: #f6f7f9;
   --code-text: #47546b;
-  --code-border: #e2e8f0;
+  --code-border: rgba(0, 0, 0, 0.15);
 
-  --border: #e2e8f0;
+  --border: rgba(0, 0, 0, 0.15);
   --background: #ffffff;
 }
 
@@ -56,9 +56,6 @@
 body {
   color: var(--text);
   background: var(--background);
-  padding: 0 2rem;
-  margin: auto;
-  /* max-width: 70ch; */
   text-align: left;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -147,6 +144,10 @@ blockquote:not(.unset)::after {
   content: "";
 }
 
+ul {
+  padding: 0;
+}
+
 ul li {
   padding: 0;
   margin: 0;
@@ -154,9 +155,10 @@ ul li {
 }
 
 aside {
-  position: fixed;
-  left: 0;
-  /* width: 20ch; */
+  position: absolute;
+  right: 100%;
+  top: 0;
+  width: max-content;
 }
 
 /* ------ GLOBAL STYLES - END ------ */

@@ -9,7 +9,6 @@ export const get = async () => {
     frontmatterSchema: blog,
   });
 
-  console.log(posts);
   const sortedPosts = posts
     .filter((p) => p.frontmatter.draft !== true)
     .sort(
@@ -24,18 +23,6 @@ export const get = async () => {
   baseUrl = baseUrl.replace(/\/+$/g, "");
 
   const rssItems = sortedPosts.map(({ frontmatter, slug }) => {
-    if (frontmatter.external) {
-      const title = frontmatter.title;
-      const pubDate = frontmatter.date;
-      const link = frontmatter.url;
-
-      return {
-        title,
-        pubDate,
-        link,
-      };
-    }
-
     const title = frontmatter.title;
     const pubDate = frontmatter.date;
     const description = frontmatter.description;

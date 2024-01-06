@@ -12,15 +12,10 @@ import type { VNode } from "preact";
 </style> */
 }
 
-export default function CenteringWrapper({ children }: { children: VNode }) {
-  return (
-    <div
-      style={{
-        maxWidth: "60ch",
-        margin: "auto",
-      }}
-    >
-      {children}
-    </div>
-  );
+export default function CenteringWrapper({
+  children,
+}: {
+  children: VNode | VNode[];
+}) {
+  return <div class="max-w-[60ch] m-auto w-[100%]">{children}</div>;
 }

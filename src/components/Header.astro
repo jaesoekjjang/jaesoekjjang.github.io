@@ -5,36 +5,37 @@ import TwitterIcon from "../components/ui/icons/twitter.astro";
 import CenteringWrapper from "@layouts/CenteringWrapper.tsx";
 ---
 
-<CenteringWrapper>
-  <header>
-    <a class="skip-to-main" href="#main"> Skip to content</a>
-    <nav>
-      <section>
-        <ul>
-          <li><HeaderLink href="/">Home</HeaderLink></li>
-          <li><HeaderLink href="/blog">Blog</HeaderLink></li>
-          <li><HeaderLink href="/projects">Projects</HeaderLink></li>
-        </ul>
-      </section>
-    </nav>
-    <div class="social-handles">
-      <a
-        class="centered"
-        href="https://github.com/flexdinesh/blogster"
-        aria-label="Blogster on GitHub"
-      >
-        <GitHubIcon title="GitHub" />
-      </a>
-      <a
-        class="centered"
-        href="https://twitter.com/flexdinesh"
-        aria-label="Dinesh on Twitter"
-      >
-        <TwitterIcon title="Twitter" />
-      </a>
+<header class="border-b-[--border] border-b-[1px]">
+  <CenteringWrapper>
+    <div class="flex items-center justify-between px-2 flex-1 w-[100%]">
+      <nav>
+        <section>
+          <ul class="my-4">
+            <li><HeaderLink href="/">Home</HeaderLink></li>
+            <li><HeaderLink href="/blog">Blog</HeaderLink></li>
+            <li><HeaderLink href="/projects">Projects</HeaderLink></li>
+          </ul>
+        </section>
+      </nav>
+      <div class="social-handles">
+        <a
+          class="centered"
+          href="https://github.com/flexdinesh/blogster"
+          aria-label="Blogster on GitHub"
+        >
+          <GitHubIcon title="GitHub" />
+        </a>
+        <a
+          class="centered"
+          href="https://twitter.com/flexdinesh"
+          aria-label="Dinesh on Twitter"
+        >
+          <TwitterIcon title="Twitter" />
+        </a>
+      </div>
     </div>
-  </header>
-</CenteringWrapper>
+  </CenteringWrapper>
+</header>
 <style>
   header {
     grid-area: header;

@@ -26,7 +26,7 @@ import CenteringWrapper from "./CenteringWrapper";
     <slot name="meta" />
   </head>
 
-  <body class="text-text-body bg-bg-body max-w-3xl mx-auto px-4 sm:px-8">
+  <body class="text-text-body bg-bg-body mx-auto">
     <Header />
     <div class="main-wrapper">
       <main id="main">
@@ -39,17 +39,11 @@ import CenteringWrapper from "./CenteringWrapper";
     <style>
       body {
         min-height: 100vh;
-        /* display: grid;
-        grid-template-areas:
-          "header"
-          "main"
-          grid-template-rows: 5rem minmax(0, 1fr) 5rem;
-          "footer";
-        grid-template-columns: minmax(0, 1fr); */
       }
 
       main {
         grid-area: main;
+        position: relative;
       }
     </style>
   </body>
