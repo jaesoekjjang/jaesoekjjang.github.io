@@ -16,7 +16,7 @@ export default function ExternalLink({
 }: Props) {
   const _className = `${className} icon-wrapper`;
   return (
-    <span className={_className}>
+    <span class={_className}>
       <svg
         class="icon"
         id="external-link-icon"

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export const DEFAULT_CATEGORY = "";
+
 const baseSchema = z.object({
   draft: z.boolean().default(false),
   featured: z.boolean().default(false),
@@ -16,7 +18,7 @@ const baseSchema = z.object({
     .string()
     .optional()
     .default("")
-    .or(z.string().array().optional().default([""])),
+    .or(z.string().array().optional().default([DEFAULT_CATEGORY])),
 });
 
 /*
