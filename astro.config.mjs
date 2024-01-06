@@ -1,6 +1,8 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import preact from "@astrojs/preact";
+import tailwind from "@astrojs/tailwind";
 /* 
   We are doing some URL mumbo jumbo here to tell Astro what the URL of your website will be.
   In local development, your SEO meta tags will have localhost URL.
@@ -10,7 +12,6 @@ import sitemap from "@astrojs/sitemap";
   If you don't know your website URL yet, don't worry about this
   and leave it empty or use localhost URL. It won't break anything.
 */
-import preact from "@astrojs/preact";
 const SERVER_PORT = 3000;
 // the url to access your blog during local development
 const LOCALHOST_URL = `http://localhost:${SERVER_PORT}`;
@@ -31,5 +32,13 @@ export default defineConfig({
     port: SERVER_PORT,
   },
   site: BASE_URL,
-  integrations: [sitemap(), preact()],
+  integrations: [
+    sitemap(),
+    preact(),
+    tailwind({
+      nesting: true,
+      // applyBaseStyles: false,
+      configFile: "./tailwind.config.cjs",
+    }),
+  ],
 });
