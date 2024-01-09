@@ -21,6 +21,11 @@
   --background: #ffffff;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 /* ------ THEMING - Dark Mode ------ */
 @media (prefers-color-scheme: dark) {
   :root {
@@ -146,6 +151,7 @@ blockquote:not(.unset)::after {
 
 ul {
   padding: 0;
+  margin: 0;
 }
 
 ul li {

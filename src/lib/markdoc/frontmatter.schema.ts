@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const DEFAULT_CATEGORY = "";
+export const DEFAULT_TAG = "";
 
 const baseSchema = z.object({
   draft: z.boolean().default(false),
@@ -14,11 +14,11 @@ const baseSchema = z.object({
     invalid_type_error:
       "date must be written in yyyy-mm-dd format without quotes: For example, Jan 22, 2000 should be written as 2000-01-22.",
   }),
-  category: z
+  tag: z
     .string()
     .optional()
     .default("")
-    .or(z.string().array().optional().default([DEFAULT_CATEGORY])),
+    .or(z.string().array().optional().default([DEFAULT_TAG])),
 });
 
 /*
@@ -34,6 +34,7 @@ export const blog = baseSchema.extend({
   description: z.optional(z.string()),
   ogImagePath: z.optional(z.string()),
   canonicalUrl: z.optional(z.string()),
+  coverImage: z.optional(z.string()),
 });
 
 export const project = baseSchema.extend({

@@ -28,7 +28,7 @@ import CenteringWrapper from "./CenteringWrapper";
 
   <body class="text-text-body bg-bg-body mx-auto">
     <Header />
-    <div class="main-wrapper">
+    <div class="main-wrapper h-[calc(100%-theme(space.16))]">
       <main id="main">
         <CenteringWrapper>
           <slot name="main" />
@@ -41,9 +41,9 @@ import CenteringWrapper from "./CenteringWrapper";
         min-height: 100vh;
       }
 
-      main {
-        grid-area: main;
+      .main-wrapper {
         position: relative;
+        min-height: 100%;
       }
     </style>
   </body>

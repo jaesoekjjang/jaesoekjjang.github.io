@@ -1,25 +1,22 @@
 import type { Signal } from "@preact/signals";
 import type { Posts } from "src/pages/blog.astro";
+import Link from "./Link";
 
-const getCatName = (cat: string) => cat || "전체";
+const getTagName = (tag: string) => tag || "전체";
 
 type Props = {
-  groupedPosts: Record<string, Posts>;
-  categories: string[];
-  selectedCategory: Signal<string>;
+  postGroup: Record<string, Posts>;
+  tags: string[];
+  selectedTag: Signal<string>;
 };
 
-export default function Sidebar({
-  categories,
-  selectedCategory,
-  groupedPosts,
-}: Props) {
+export default function Sidebar({ tags, selectedTag, postGroup }: Props) {
   const getClassName = (c: string) =>
-    c === selectedCategory.value
+    c === selectedTag.value
       ? "text-highlight decoration-[--palette-primary]"
       : undefined;
 
-  const handleClickCategory = (c: string) => () => (selectedCategory.value = c);
+  const handleClickTag = (c: string) => () => (selectedTag.value = c);
 
   return (
     <aside
@@ -30,17 +27,17 @@ export default function Sidebar({
         태그 목록
       </div>
       <ul class="flex gap-2 md:flex-col">
-        {categories.map((cat) => (
+        {tags.map((tag) => (
           <li
             class={`text-sm hover:underline underline-offset-1 ${getClassName(
-              cat
+              tag
             )}`}
-            onClick={handleClickCategory(cat)}
+            onClick={handleClickTag(tag)}
             style={{ cursor: "pointer" }}
           >
-            <a class="unset" href={`/blog?tag=${cat}`}>
-              #{getCatName(cat)} ({groupedPosts[cat].length})
-            </a>
+            <Link class="unset" href={`/blog?tag=${tag}`}>
+              #{getTagName(tag)} ({postGroup[tag].length})
+            </Link>
           </li>
         ))}
       </ul>

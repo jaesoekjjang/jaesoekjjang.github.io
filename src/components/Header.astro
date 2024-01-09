@@ -5,7 +5,7 @@ import TwitterIcon from "../components/ui/icons/twitter.astro";
 import CenteringWrapper from "@layouts/CenteringWrapper.tsx";
 ---
 
-<header class="border-b-[--border] border-b-[1px]">
+<header class="h-16 border-b-[--border] border-b-[1px]">
   <CenteringWrapper>
     <div class="flex items-center justify-between px-2 flex-1 w-[100%]">
       <nav>
@@ -37,16 +37,6 @@ import CenteringWrapper from "@layouts/CenteringWrapper.tsx";
   </CenteringWrapper>
 </header>
 <style>
-  header {
-    grid-area: header;
-    display: grid;
-    align-items: center;
-    grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(
-        0,
-        max-content
-      );
-  }
-
   nav {
     display: flex;
     gap: 0.5rem;
