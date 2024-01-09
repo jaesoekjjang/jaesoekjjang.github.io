@@ -23,7 +23,12 @@ export default function BlogContent({
 
   return (
     <div class="relative max-w-3xl m-auto">
-      <Sidebar tags={tags} selectedTag={tag} postGroup={postGroup.value} />
+      <Sidebar
+        tags={tags}
+        selectedTag={tag}
+        postGroup={postGroup.value}
+        posts={posts}
+      />
       <div class="mt-5">
         <ul class="flex flex-col gap-2 hover:bg-[--]">
           {filteredPosts.value.map(

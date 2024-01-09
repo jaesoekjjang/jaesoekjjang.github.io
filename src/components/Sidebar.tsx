@@ -8,9 +8,15 @@ type Props = {
   postGroup: Record<string, Posts>;
   tags: string[];
   selectedTag: Signal<string>;
+  posts: Posts;
 };
 
-export default function Sidebar({ tags, selectedTag, postGroup }: Props) {
+export default function Sidebar({
+  tags,
+  selectedTag,
+  postGroup,
+  posts,
+}: Props) {
   const getClassName = (c: string) =>
     c === selectedTag.value
       ? "text-highlight decoration-[--palette-primary]"
@@ -36,7 +42,7 @@ export default function Sidebar({ tags, selectedTag, postGroup }: Props) {
             style={{ cursor: "pointer" }}
           >
             <Link class="unset" href={`/blog?tag=${tag}`}>
-              #{getTagName(tag)} ({postGroup[tag].length})
+              #{getTagName(tag)} ({tag ? postGroup[tag].length : posts.length})
             </Link>
           </li>
         ))}
