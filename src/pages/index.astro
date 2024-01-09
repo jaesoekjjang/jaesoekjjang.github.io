@@ -1,15 +1,55 @@
 ---
 import PageMeta from "../components/PageMeta.astro";
 import PageLayout from "../layouts/PageLayout.astro";
-import Intro from "../components/Intro.astro";
-import AboutTheTheme from "../components/AboutTheTheme.astro";
 import { SITE_TITLE } from "../config";
+import { blog } from "src/lib/markdoc/frontmatter.schema";
+import { readAll } from "src/lib/markdoc/read";
+
+const posts = await readAll({
+  directory: "blog",
+  frontmatterSchema: blog,
+});
+
+const sortedPosts = posts
+  .filter((p) => p.frontmatter.draft !== true)
+  .sort(
+    (a, b) =>
+      new Date(b.frontmatter.date).valueOf() -
+      new Date(a.frontmatter.date).valueOf()
+  );
 ---
 
-<PageLayout>
+<PageLayout width="lg">
   <PageMeta title={`${SITE_TITLE} | Web Ninja`} slot="meta" />
-  <Fragment slot="main">
-    <Intro />
-    <AboutTheTheme />
-  </Fragment>
+  <div slot="main" class="prose">
+    <div class="mt-8 mb-4">
+      <div class="border-b-[--border] border-b-[1px] pb-4">블로그</div>
+      <div class="flex h-[320px] gap-6">
+        {
+          sortedPosts
+            .slice(0, 3)
+            .map(({ frontmatter: { title, coverImage } }) => (
+              <div class="prose">
+                <div class=" bg-[--code-background] h-44 aspect-video mb-4">
+                  {coverImage ? (
+                    <img
+                      src={`${import.meta.env.SITE}/content/blog/${coverImage}`}
+                      class="h-[100%] object-cover my-auto"
+                      alt={`${title}-cover-image`}
+                    />
+                  ) : null}
+                </div>
+                <div>
+                  <h3 class="my-0">{title}</h3>
+                </div>
+              </div>
+            ))
+        }
+      </div>
+    </div>
+    <!-- <div>
+      <div class="border-b-[--border] border-b-[1px] pb-4">프로젝트</div>
+      <div class="h-[320px]"></div>
+    </div> -->
+  </div>
 </PageLayout>

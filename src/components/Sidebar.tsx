@@ -21,12 +21,12 @@ export default function Sidebar({ tags, selectedTag, postGroup }: Props) {
   return (
     <aside
       class="relative bottom-0 left-0 mb-2 text-[--text] 
-        md:absolute md:right-[calc(100%+20px)] md:left-auto md:top-4 md:w-44"
+        xl:absolute xl:-left-52 xl:top-4 xl:w-40"
     >
-      <div class="hidden p-1 mb-2 border-b-[--border] md:block md:border-b-[1px]">
+      <div class="hidden p-1 mb-2 border-b-[--border] xl:block xl:border-b-[1px]">
         태그 목록
       </div>
-      <ul class="flex gap-2 md:flex-col">
+      <ul class="flex gap-2 px-4 pt-4 xl:flex-col xl:p-0">
         {tags.map((tag) => (
           <li
             class={`text-sm hover:underline underline-offset-1 ${getClassName(

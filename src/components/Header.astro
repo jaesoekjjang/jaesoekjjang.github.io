@@ -1,41 +1,34 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
-import GitHubIcon from "../components/ui/icons/github.astro";
-import TwitterIcon from "../components/ui/icons/twitter.astro";
-import CenteringWrapper from "@layouts/CenteringWrapper.tsx";
+import {
+  ToggleLight,
+  DEFAULT_HEIGHT,
+  DEFAULT_WIDTH,
+} from "@components/ui/icons/toggle-light";
+
+const toggleHeight = 32;
+const toggleWidth = (32 * DEFAULT_WIDTH) / DEFAULT_HEIGHT;
 ---
 
-<header class="h-16 border-b-[--border] border-b-[1px]">
-  <CenteringWrapper>
-    <div class="flex items-center justify-between px-2 flex-1 w-[100%]">
-      <nav>
-        <section>
-          <ul class="my-4">
-            <li><HeaderLink href="/">Home</HeaderLink></li>
-            <li><HeaderLink href="/blog">Blog</HeaderLink></li>
-            <li><HeaderLink href="/projects">Projects</HeaderLink></li>
-          </ul>
-        </section>
-      </nav>
-      <div class="social-handles">
-        <a
-          class="centered"
-          href="https://github.com/flexdinesh/blogster"
-          aria-label="Blogster on GitHub"
-        >
-          <GitHubIcon title="GitHub" />
-        </a>
-        <a
-          class="centered"
-          href="https://twitter.com/flexdinesh"
-          aria-label="Dinesh on Twitter"
-        >
-          <TwitterIcon title="Twitter" />
-        </a>
-      </div>
-    </div>
-  </CenteringWrapper>
+<header class="h-114 border-b-[--border] border-b-[1px]">
+  <div class="px-6 flex items-center justify-between flex-1 w-[100%]">
+    <div>asd</div>
+    <nav>
+      <ul class="my-4">
+        <li><HeaderLink href="/blog">Blog</HeaderLink></li>
+        <li><HeaderLink href="/projects">Projects</HeaderLink></li>
+        <li>
+          <ToggleLight
+            title="lightmode-toggle"
+            width={`${toggleWidth}px`}
+            height={`${toggleHeight}px`}
+          />
+        </li>
+      </ul>
+    </nav>
+  </div>
 </header>
+
 <style>
   nav {
     display: flex;

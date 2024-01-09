@@ -5,7 +5,6 @@ export interface Props extends astroHTML.JSX.BaseHTMLAttributes {
   height?: number | string;
 }
 
-// const  = Astro.props;
 // ---
 
 export default function ExternalLink({

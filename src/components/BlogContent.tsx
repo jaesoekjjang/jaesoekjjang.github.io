@@ -22,60 +22,62 @@ export default function BlogContent({
   );
 
   return (
-    <>
+    <div class="relative max-w-3xl m-auto">
       <Sidebar tags={tags} selectedTag={tag} postGroup={postGroup.value} />
-      <ul class="flex flex-col gap-2  hover:bg-[--]">
-        {filteredPosts.value.map(
-          (
-            { frontmatter: { date, title, description, coverImage }, slug },
-            index
-          ) => {
-            const formattedDate = formatKorDate(date);
-            return (
-              <>
-                {index ? <hr class="border-t-[--border]" /> : null}
-                <li
-                  class="flex justify-between p-4
+      <div class="mt-5">
+        <ul class="flex flex-col gap-2 hover:bg-[--]">
+          {filteredPosts.value.map(
+            (
+              { frontmatter: { date, title, description, coverImage }, slug },
+              index
+            ) => {
+              const formattedDate = formatKorDate(date);
+              return (
+                <>
+                  {index ? <hr class="border-t-[--border]" /> : null}
+                  <li
+                    class="flex justify-between py-4
                   truncate overflow-hidden text-ellipsis
                   cursor-pointer
                   "
-                >
-                  <a class="unset w-[100%]" href={`/blog/${slug}`}>
-                    <div class="prose prose-lg dark:prose-invert">
-                      <div class="  flex justify-between min-h-24">
-                        <div class="flex flex-col justify-between truncate gap-2">
-                          <div>
-                            <h3 class="my-0 whitespace-normal">{title}</h3>
-                            <div class="prose mb-2 truncate overflow-ellipsis">
-                              {description}
+                  >
+                    <a class="unset w-[100%]" href={`/blog/${slug}`}>
+                      <div class="prose prose-lg dark:prose-invert">
+                        <div class="  flex justify-between min-h-24">
+                          <div class="flex flex-col justify-between truncate gap-2">
+                            <div>
+                              <h3 class="my-0 whitespace-normal">{title}</h3>
+                              <div class="prose mb-2 truncate overflow-ellipsis">
+                                {description}
+                              </div>
+                            </div>
+                            <div class="text-xs">
+                              <time datetime={date.toISOString()}>
+                                {formattedDate}
+                              </time>
                             </div>
                           </div>
-                          <div class="text-xs">
-                            <time datetime={date.toISOString()}>
-                              {formattedDate}
-                            </time>
+                          <div class="m-0 h-28 aspect-square bg-[--code-background]">
+                            {coverImage ? (
+                              <img
+                                src={`${
+                                  import.meta.env.SITE
+                                }/content/blog/${coverImage}`}
+                                class="h-[100%] object-contain my-auto"
+                                alt={`${title}-cover-image`}
+                              />
+                            ) : null}
                           </div>
                         </div>
-                        <div class="m-0 h-28 aspect-square bg-[--code-background]">
-                          {coverImage ? (
-                            <img
-                              src={`${
-                                import.meta.env.SITE
-                              }/content/blog/${coverImage}`}
-                              class="h-[100%] object-contain my-auto"
-                              alt={`${title}-cover-image`}
-                            />
-                          ) : null}
-                        </div>
                       </div>
-                    </div>
-                  </a>
-                </li>
-              </>
-            );
-          }
-        )}
-      </ul>
-    </>
+                    </a>
+                  </li>
+                </>
+              );
+            }
+          )}
+        </ul>
+      </div>
+    </div>
   );
 }
