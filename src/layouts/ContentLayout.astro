@@ -7,16 +7,15 @@
 import "../styles/global.css";
 import "../styles/markdown.css";
 
-import Header from "../components/Header.astro";
-import Favicon from "./Favicon.astro";
 import PageLayout from "./PageLayout.astro";
 
 export interface Props {
   title: string;
   date: Date;
+  coverImage?: string;
 }
 
-const { title, date } = Astro.props;
+const { title, date, coverImage } = Astro.props;
 const formattedDate = new Date(date).toLocaleDateString("en-us", {
   year: "numeric",
   month: "short",
@@ -26,9 +25,15 @@ const formattedDate = new Date(date).toLocaleDateString("en-us", {
 
 <PageLayout>
   <section class="blog-post" slot="main">
-    <div class="relative max-w-3xl m-auto">
-      <h1 class="title">{title}</h1>
+    <div class="relative max-w-2xl m-auto">
+      <h1 class="title mt-6">{title}</h1>
       <time class="publish-date">{formattedDate}</time>
+      <img
+        width="100%"
+        src={`${import.meta.env.SITE}/content/blog/${coverImage}`}
+        class="max-w-[100%] aspect-video object-fill"
+        alt={`${title}-cover-image`}
+      />
       <slot name="content" />
     </div>
   </section>
