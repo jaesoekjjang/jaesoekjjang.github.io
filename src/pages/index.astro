@@ -21,26 +21,27 @@ const sortedPosts = posts
 
 <PageLayout width="lg">
   <PageMeta title={`${SITE_TITLE} | Web Ninja`} slot="meta" />
-  <div slot="main" class="prose">
+  <div slot="main" class="max-w-6xl m-auto px-6">
     <div class="mt-8 mb-4">
       <div class="border-b-[--border] border-b-[1px] pb-4">블로그</div>
-      <div class="flex h-[320px] gap-6">
+      <div class="flex h-[320px] gap-6 mt-5 max-h-60">
         {
           sortedPosts
             .slice(0, 3)
-            .map(({ frontmatter: { title, coverImage } }) => (
+            .map(({ frontmatter: { title, description, coverImage } }) => (
               <div class="prose">
                 <div class=" bg-[--code-background] h-44 aspect-video mb-4">
                   {coverImage ? (
                     <img
                       src={`${import.meta.env.SITE}/content/blog/${coverImage}`}
-                      class="h-[100%] object-cover my-auto"
+                      class="h-[100%] w-[100%] object-contain my-auto"
                       alt={`${title}-cover-image`}
                     />
                   ) : null}
-                </div>
-                <div>
-                  <h3 class="my-0">{title}</h3>
+                  <div>
+                    <h3 class="mt-3 my-1">{title}</h3>
+                    <p class="text-sm">{description}</p>
+                  </div>
                 </div>
               </div>
             ))

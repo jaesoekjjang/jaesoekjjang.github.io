@@ -23,7 +23,9 @@ const sortedProjects = projects
 <PageLayout>
   <PageMeta title={`Projects | ${SITE_TITLE}`} slot="meta" />
   <section slot="main">
-    <ul>
+    <h1 class="text-3xl text-center">준비 중입니다. 🚧</h1>
+
+    <!-- <ul>
       {
         sortedProjects.map((project) => {
           const formattedDate = new Date(
@@ -55,12 +57,12 @@ const sortedProjects = projects
           );
         })
       }
-    </ul>
+    </ul> -->
   </section>
 </PageLayout>
 
 <style>
-  /* .project {
+  .project {
     display: grid;
     grid-template-columns: 1fr;
     line-height: 1.5;
@@ -69,7 +71,7 @@ const sortedProjects = projects
   @media (min-width: 640px) {
     .project {
       grid-template-columns: 1fr auto;
-      /* gap: 2rem; */
+      gap: 2rem;
     }
   }
 
@@ -90,5 +92,5 @@ const sortedProjects = projects
     color: var(--text-muted);
     font-size: 0.875rem;
     font-style: italic;
-  } */
+  }
 </style>
