@@ -21,7 +21,6 @@ const SCRIPT = process.env.npm_lifecycle_script || "";
 const isBuild = SCRIPT.includes("astro build");
 
 const SITE = isBuild ? LIVE_URL : LOCALHOST_URL;
-const BASE = isBuild ? "blog" : "/";
 
 // https://astro.build/config
 export default defineConfig({
@@ -29,7 +28,6 @@ export default defineConfig({
     port: SERVER_PORT,
   },
   site: SITE,
-  base: BASE,
   integrations: [
     sitemap(),
     preact(),
