@@ -65,9 +65,7 @@ export default function BlogContent({
                           <div class="m-0 h-28 aspect-square bg-[--code-background]">
                             {coverImage ? (
                               <img
-                                src={`${
-                                  import.meta.env.SITE
-                                }/content/blog/${coverImage}`}
+                                src={`/images/${coverImage}`}
                                 class="h-[100%] object-contain my-auto"
                                 alt={`${title}-cover-image`}
                               />
