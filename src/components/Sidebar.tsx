@@ -32,7 +32,7 @@ export default function Sidebar({
       <div class="hidden p-1 mb-2 border-b-[--border] xl:block xl:border-b-[1px]">
         태그 목록
       </div>
-      <ul class="flex gap-2 px-4 pt-4 xl:flex-col xl:p-0">
+      <ul class="flex gap-2 pt-4 xl:flex-col xl:p-0">
         {tags.map((tag) => (
           <li
             class={`text-sm hover:underline underline-offset-1 ${getClassName(

@@ -22,7 +22,7 @@ export default function BlogContent({
   );
 
   return (
-    <div class="relative max-w-3xl m-auto">
+    <div class="relative max-w-3xl m-auto px-6">
       <Sidebar
         tags={tags}
         selectedTag={tag}
@@ -66,7 +66,7 @@ export default function BlogContent({
                             {coverImage ? (
                               <img
                                 src={`/images/${coverImage}`}
-                                class="h-[100%] object-contain my-auto"
+                                class="h-[100%] object-cover my-auto"
                                 alt={`${title}-cover-image`}
                               />
                             ) : null}

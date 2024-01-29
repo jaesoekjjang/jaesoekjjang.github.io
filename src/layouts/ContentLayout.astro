@@ -13,9 +13,10 @@ export interface Props {
   title: string;
   date: Date;
   coverImage?: string;
+  description: string;
 }
 
-const { title, date, coverImage } = Astro.props;
+const { title, date, coverImage, description } = Astro.props;
 const formattedDate = new Date(date).toLocaleDateString("en-us", {
   year: "numeric",
   month: "short",
@@ -26,12 +27,14 @@ const formattedDate = new Date(date).toLocaleDateString("en-us", {
 <PageLayout>
   <section class="blog-post" slot="main">
     <div class="relative max-w-2xl m-auto py-12">
-      <h1 class="title">{title}</h1>
-      <time class="publish-date">{formattedDate}</time>
+      <div class="mb-12">
+      <h1 class="mb-0">{title}</h1>
+        <time class="publish-date">{formattedDate}</time>
+      </div>
       <img
         width="100%"
         src={`/images/${coverImage}`}
-        class="max-w-[100%] aspect-video object-fill"
+        class="max-w-[100%] aspect-video mb-12 object-contain"
         alt={`${title}-cover-image`}
       />
       <slot name="content" />
