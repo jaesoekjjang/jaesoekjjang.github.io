@@ -31,12 +31,12 @@ coverImage: eslint-plugin-react.png
 </tr>
 ```
 
-위와 같이 잘 작성한 코드는 문제가 없지만, 기존 eslint-plugin-react나 ts에서는 `readOnly`를 빼먹어도 이를 경고하지 않기 때문에 나중에서야 콘솔에 에러가 가득한 것을 보곤 했습니다. 불편함을 느껴 관련한 eslint-plugin이 없나 찾아보던 중 관련한 [help-wated 이슈](https://github.com/jsx-eslint/eslint-plugin-react/issues/3143)가 있는 것을 확인, 같은 이슈를 대상으로 진행 중인 PR이 없는 것을 보고 집에서 직접 작성해보기로 결심했습니다. 마침 해당 시점에 babel과 AST에 대한 공부도 하고있던 터라, 쉽게 도전해볼 수 있었던 것 같습니다.
+위와 같이 잘 작성한 코드는 문제가 없지만, 기존 eslint-plugin-react나 ts 컴파일러에서는 `readOnly`를 빼먹어도 이를 경고하지 않기 때문에 나중에서야 콘솔에 에러가 가득한 것을 보곤 했습니다. 불편함을 느껴 관련한 eslint-plugin이 없나 찾아보던 중 관련한 [help-wated 이슈](https://github.com/jsx-eslint/eslint-plugin-react/issues/3143)가 있는 것을 확인, 같은 이슈를 대상으로 진행 중인 PR이 없는 것을 보고 집에서 직접 작성해보기로 결심했습니다. 마침 해당 시점에 babel과 AST에 대한 공부도 하고있던 터라, 쉽게 도전해볼 수 있었던 것 같습니다.
 
 ## 추가하면서 느낀 점
 
 소통은 역시 즐겁다는 것을 다시 느꼈습니다. 규칙의 필요성에 대해 논의하거나, 간단한 댓글을 주고받는 것도 Github 상에선 괜히 즐겁게 느껴집니다. PR을 올리니 이슈가 분명 올라와있음에도 이유에 대해 자꾸만 설명해달라고 하길래 '이전에 너(ljharb)가 도움이 필요하다고 올렸던 이슈이지 않느냐'라고 물으니 '3년 전에 올렸던 것이라 까먹었다. 다시 리뷰해야겠다.'라고 답한 것도 재밌었습니다.
-![메인테이너와_소통](/public/images/eslint-plugin-react-comment.png)
+![메인테이너와_소통](/images/eslint-plugin-react-comment.png)
 번외로 [ljharb](https://github.com/ljharb) 이 분, nvm이나 qs와 같은 누구나 들어봤을 법한 프로젝트를 메인테이닝하고, TC39 구성원이기도 한 대단한 분이더라구요. 이런 분과 소통해봤다는 것도 참 신기했습니다.
 
 ## 다음 포스팅
