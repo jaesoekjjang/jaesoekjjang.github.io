@@ -1,0 +1,44 @@
+---
+external: false
+title: "eslint-plugin-react에 기여했습니다"
+description: "지난 달 eslint-plugin-react에 올린 새로운 규칙, checked-requires-onchange-or-readonly이 추가되었습니다 🥳"
+date: 2023-02-20
+tag:
+  - Open Source
+  - ESLint
+coverImage: eslint-plugin-react.png
+---
+
+## 새로운 규칙으로 등록되다!
+
+와~~ 지난 달 제가 작성한 eslint-plugin-react 규칙이 드디어 머지되었습니다. 대단한 코드는 아니지만, 지난 번에 Jotai에 기여한 것에 비해 훨씬 많은 줄의 코드와 기능을 추가해서 그런지 개인적으로 너무 뿌듯하고 자랑하고싶어 블로그를 켰습니다😏. 제가 추가한 규칙은 `checked-requires-onchange-or-readonly`라는 긴 이름의 규칙으로, [README](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/checked-requires-onchange-or-readonly.md)에도 설명되어있듯 다음 두 가지 항목을 따를 것을 강요합니다.
+
+- `input` 컴포넌트에 `checked` 속성이 쓰였다면, `onChange` 또는 `readOnly` 속성 중 하나를 반드시 사용할 것.
+
+- 또한 `checked`와 `defaultChecked` 속성을 함께 사용하지 않을 것.
+
+## 어쩌다 추가하게 되었나
+
+이 규칙은 사실 회사에서 진행하는 프로젝트에서 필요성을 느껴 추가하게되었습니다. 해당 프로젝트에서 가장 자주 보이는 UI 중 하나는 테이블입니다. 특히 테이블의 각 행에 `input` `checkbox`나 `radio`가 있고, 행을 클릭했을 때 `input`이 체크되어야 하는 경우가 많이 있는데 코드로는 주로 다음과 같이 구현됩니다.
+
+```jsx
+<tr onClick={check}>
+  <td>
+    <input type="checkbox" checked={checked} readOnly />
+  </td>
+  <td>...</td>
+  <td>...</td>
+</tr>
+```
+
+위와 같이 잘 작성한 코드는 문제가 없지만, 기존 eslint-plugin-react나 ts에서는 `readOnly`를 빼먹어도 이를 경고하지 않기 때문에 나중에서야 콘솔에 에러가 가득한 것을 보곤 했습니다. 불편함을 느껴 관련한 eslint-plugin이 없나 찾아보던 중 관련한 [help-wated 이슈](https://github.com/jsx-eslint/eslint-plugin-react/issues/3143)가 있는 것을 확인, 같은 이슈를 대상으로 진행 중인 PR이 없는 것을 보고 집에서 직접 작성해보기로 결심했습니다. 마침 해당 시점에 babel과 AST에 대한 공부도 하고있던 터라, 쉽게 도전해볼 수 있었던 것 같습니다.
+
+## 추가하면서 느낀 점
+
+소통은 역시 즐겁다는 것을 다시 느꼈습니다. 규칙의 필요성에 대해 논의하거나, 간단한 댓글을 주고받는 것도 Github 상에선 괜히 즐겁게 느껴집니다. PR을 올리니 이슈가 분명 올라와있음에도 이유에 대해 자꾸만 설명해달라고 하길래 '이전에 너(ljharb)가 도움이 필요하다고 올렸던 이슈이지 않느냐'라고 물으니 '3년 전에 올렸던 것이라 까먹었다. 다시 리뷰해야겠다.'라고 답한 것도 재밌었습니다.
+![메인테이너와_소통](/public/images/eslint-plugin-react-comment.png)
+번외로 [ljharb](https://github.com/ljharb) 이 분, nvm이나 qs와 같은 누구나 들어봤을 법한 프로젝트를 메인테이닝하고, TC39 구성원이기도 한 대단한 분이더라구요. 이런 분과 소통해봤다는 것도 참 신기했습니다.
+
+## 다음 포스팅
+
+다음 포스팅에선 커스텀 eslint-plugin을 작성하는 방법과 함께 이번에 추가한 규칙이 어떻게 작성되었는지 간단히 설명해보겠습니다. 코드는 이곳 [Repo](https://github.com/jsx-eslint/eslint-plugin-react?tab=readme-ov-file#list-of-supported-rules)에서 미리 확인하실 수 있습니다. 그럼 20000!👋

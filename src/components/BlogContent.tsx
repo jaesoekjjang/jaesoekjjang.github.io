@@ -41,18 +41,18 @@ export default function BlogContent({
                 <>
                   {index ? <hr class="border-t-[--border]" /> : null}
                   <li
-                    class="flex justify-between py-4
+                    class="flex justify-between 
                   truncate overflow-hidden text-ellipsis
                   cursor-pointer
                   "
                   >
-                    <a class="unset w-[100%]" href={`/blog/${slug}`}>
-                      <div class="prose prose-lg dark:prose-invert">
-                        <div class="  flex justify-between min-h-24">
+                    <a class="unset  w-[100%]" href={`/blog/${slug}`}>
+                      <div class="prose prose-lg py-4 dark:prose-invert">
+                        <div class="flex justify-between gap-5 min-h-24">
                           <div class="flex flex-col justify-between truncate gap-2">
                             <div>
-                              <h3 class="my-0 whitespace-normal">{title}</h3>
-                              <div class="prose mb-2 truncate overflow-ellipsis">
+                              <h3 class="my-0 ">{title}</h3>
+                              <div class="prose mb-2 overflow-ellipsis whitespace-normal line-clamp-2">
                                 {description}
                               </div>
                             </div>
