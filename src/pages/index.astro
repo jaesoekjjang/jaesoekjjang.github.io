@@ -1,60 +1,56 @@
 ---
-import PageMeta from "../components/PageMeta.astro";
-import PageLayout from "../layouts/PageLayout.astro";
-import { SITE_TITLE } from "../config";
-import { blog } from "src/lib/markdoc/frontmatter.schema";
-import { readAll } from "src/lib/markdoc/read";
+import { getCollection } from "astro:content";
+import BaseLayout from "../components/BaseLayout.astro";
 
-const posts = await readAll({
-  directory: "blog",
-  frontmatterSchema: blog,
-});
+const blogs = await getCollection("blogs");
 
-const sortedPosts = posts
-  .filter((p) => p.frontmatter.draft !== true)
-  .sort(
-    (a, b) =>
-      new Date(b.frontmatter.date).valueOf() -
-      new Date(a.frontmatter.date).valueOf()
-  );
+// const posts = await readAll({
+//   directory: "blog",
+//   frontmatterSchema: blog,
+// });
+
+// const sortedPosts = posts
+//   .filter((p) => p.frontmatter.draft !== true)
+//   .sort(
+//     (a, b) =>
+//       new Date(b.frontmatter.date).valueOf() -
+//       new Date(a.frontmatter.date).valueOf()
+//   );
 ---
 
-<PageLayout width="lg">
-  <PageMeta title={SITE_TITLE} slot="meta" />
+<BaseLayout>
   <div slot="main" class="max-w-6xl m-auto px-6">
     <div class="mt-8 mb-4">
       <div class="text-lg border-b-[--border] border-b-[1px] pb-4">블로그</div>
       <div class="flex h-[320px] gap-6 mt-5 max-h-60">
         {
-          sortedPosts
+          blogs
             .slice(0, 3)
-            .map(
-              ({ frontmatter: { title, description, coverImage }, slug }) => (
-                <a class="unset" href={`/blog/${slug}`}>
-                  <div class=" bg-[--code-background] h-44 aspect-video mb-4">
-                    {coverImage ? (
-                      <img
-                        src={`/images/${coverImage}`}
-                        class="h-[100%] w-[100%] object-cover my-auto"
-                        alt={`${title}-cover-image`}
-                      />
-                    ) : null}
-                    <div>
-                      <h4
-                        class="text-xl 
+            .map(({ data: { title, description, coverImage }, slug }) => (
+              <a class="unset" href={`/blogs/${slug}`}>
+                <div class=" bg-[--code-background] h-44 aspect-video mb-4">
+                  {coverImage ? (
+                    <img
+                      src={`/images/${coverImage}`}
+                      class="h-[100%] w-[100%] object-cover my-auto"
+                      alt={`${title}-cover-image`}
+                    />
+                  ) : null}
+                  <div>
+                    <h4
+                      class="text-xl 
                       font-medium
                       mt-3 my-2"
-                      >
-                        {title}
-                      </h4>
-                      <p class="text-sm">{description}</p>
-                    </div>
+                    >
+                      {title}
+                    </h4>
+                    <p class="text-sm">{description}</p>
                   </div>
-                </a>
-              )
-            )
+                </div>
+              </a>
+            ))
         }
       </div>
     </div>
   </div>
-</PageLayout>
+</BaseLayout>

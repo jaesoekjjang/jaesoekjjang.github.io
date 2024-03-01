@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import BlogPostMeta from "../../components/BlogPostMeta.astro";
+import { SITE_URL } from "../../meta";
+import BaseLayout from "../../components/BaseLayout.astro";
+import Prose from "../../components/Prose.astro";
+
+interface Props {
+  entry: CollectionEntry<"blogs">;
+}
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection("blogs");
+
+  return blogEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const {
+  entry: { render, data, slug },
+} = Astro.props;
+const { Content, headings } = await render();
+
+const ogImageAbsoluteUrl = data.coverImage?.url
+  ? new URL(data.coverImage.url, SITE_URL).toString()
+  : undefined;
+---
+
+<div class="wrwapper">
+  <BaseLayout>
+    <BlogPostMeta
+      title={data.title}
+      description={data.description}
+      publishDate={data.date}
+      pagePath={`/blog/${slug}`}
+      ogImageAbsoluteUrl={ogImageAbsoluteUrl}
+      slot="meta"
+    />
+    <div slot="main">
+      <aside class="aside">
+        {headings.map((x) => <a href={`#${x.slug}`}>{x.text}</a>)}
+      </aside>
+      <Prose>
+        <Content />
+      </Prose>
+    </div>
+  </BaseLayout>
+</div>

@@ -1,22 +1,19 @@
 ---
-import "../styles/global.css";
-import Header from "../components/Header.astro";
-import Favicon from "./Favicon.astro";
 import { ViewTransitions } from "astro:transitions";
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html class="theme-sleek" lang="en">
   <head>
-    <!-- Global Metadata -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <ViewTransitions>
-      <Favicon />
+      <!-- <Favicon /> -->
       <slot name="meta" />
     </ViewTransitions>
-  </head><body class="text-text-body bg-bg-body mx-auto">
-    <Header />
+  </head>
+  <body class="text-text-body bg-bg-body mx-auto">
+    <!-- <Header /> -->
     <div class="main-wrapper h-[calc(100%-theme(space.16))]">
       <main id="main">
         <slot name="main" />
@@ -26,7 +23,6 @@ import { ViewTransitions } from "astro:transitions";
       body {
         min-height: 100vh;
       }
-
       .main-wrapper {
         position: relative;
         min-height: 100%;

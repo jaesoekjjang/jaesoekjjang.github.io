@@ -1,21 +1,6 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "display": "theme/minimal",
   "compilerOptions": {
-    "types": ["astro/client"],
-    "plugins": [
-      {
-        "name": "@astrojs/ts-plugin"
-      }
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@": ["src"],
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"]
-    },
-    "jsx": "react-jsx",
-    "allowImportingTsExtensions": true,
-    "jsxImportSource": "preact"
+    "strictNullChecks": true
   }
 }

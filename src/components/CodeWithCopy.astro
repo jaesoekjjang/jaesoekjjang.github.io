@@ -1,0 +1,41 @@
+---
+import { Code } from "astro:components";
+
+type CodeProps = Parameters<typeof Code>[0];
+
+type Props = CodeProps;
+
+const { props } = Astro;
+---
+
+<script>
+  let timeout: undefined | number;
+
+  document.querySelector(".copy")?.addEventListener("click", (e) => {
+    const target = e.target as Element;
+
+    const code = target.getAttribute("data-code");
+    code &&
+      window.navigator.clipboard
+        .writeText(code)
+        .then(() => (target.textContent = "✅"))
+        .catch(() => (target.textContent = "❌"));
+
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+      target.textContent = "📁";
+    }, 1500);
+  });
+</script>
+
+<div class="relative min-h-7 bg-[#2d333b]">
+  <Code {...props} />
+  <button
+    class="copy
+        absolute top-2 right-2
+        inline-flex items-center justify-center
+        p-2 w-8 h-8 text-white bg-[#2d333b] hover:bg-[#444c56]"
+    data-code={props.code}>📁</button
+  >
+</div>

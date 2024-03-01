@@ -77,8 +77,6 @@ export function getPageMeta({
     ogImageAltText = !ogImageAltText
       ? `Preview image for ${pageTitle}`
       : ogImageAltText;
-    // ogImageWidth = !ogImageWidth ? 1200 : ogImageWidth;
-    // ogImageHeight = !ogImageHeight ? 627 : ogImageHeight;
   }
 
   const meta: PageMeta = { title: pageTitle, description: description };
