@@ -47,14 +47,14 @@ export default function BlogContent({
                   "
                   >
                     <a class="unset  w-[100%]" href={`/blog/${slug}`}>
-                      <div class="prose prose-lg py-4 dark:prose-invert">
+                      <div class="py-4">
                         <div class="flex justify-between gap-5 min-h-24">
                           <div class="flex flex-col justify-between truncate gap-2">
                             <div>
-                              <h3 class="my-0 ">{title}</h3>
-                              <div class="prose mb-2 overflow-ellipsis whitespace-normal line-clamp-2">
+                              <h3 class="text-xl font-medium mb-2">{title}</h3>
+                              <p class="text-sm mb-2 overflow-ellipsis whitespace-normal line-clamp-2">
                                 {description}
-                              </div>
+                              </p>
                             </div>
                             <div class="text-xs">
                               <time datetime={date.toISOString()}>

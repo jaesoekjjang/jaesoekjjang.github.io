@@ -20,17 +20,17 @@ const sortedPosts = posts
 ---
 
 <PageLayout width="lg">
-  <PageMeta title={`${SITE_TITLE} | Web Ninja`} slot="meta" />
+  <PageMeta title={SITE_TITLE} slot="meta" />
   <div slot="main" class="max-w-6xl m-auto px-6">
     <div class="mt-8 mb-4">
-      <div class="border-b-[--border] border-b-[1px] pb-4">블로그</div>
+      <div class="text-lg border-b-[--border] border-b-[1px] pb-4">블로그</div>
       <div class="flex h-[320px] gap-6 mt-5 max-h-60">
         {
           sortedPosts
             .slice(0, 3)
             .map(
               ({ frontmatter: { title, description, coverImage }, slug }) => (
-                <a class="prose unset" href={`/blog/${slug}`}>
+                <a class="unset" href={`/blog/${slug}`}>
                   <div class=" bg-[--code-background] h-44 aspect-video mb-4">
                     {coverImage ? (
                       <img
@@ -40,7 +40,13 @@ const sortedPosts = posts
                       />
                     ) : null}
                     <div>
-                      <h3 class="mt-3 my-1">{title}</h3>
+                      <h4
+                        class="text-xl 
+                      font-medium
+                      mt-3 my-2"
+                      >
+                        {title}
+                      </h4>
                       <p class="text-sm">{description}</p>
                     </div>
                   </div>
@@ -50,9 +56,5 @@ const sortedPosts = posts
         }
       </div>
     </div>
-    <!-- <div>
-      <div class="border-b-[--border] border-b-[1px] pb-4">프로젝트</div>
-      <div class="h-[320px]"></div>
-    </div> -->
   </div>
 </PageLayout>

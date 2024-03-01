@@ -24,6 +24,9 @@ const SITE = isBuild ? LIVE_URL : LOCALHOST_URL;
 
 // https://astro.build/config
 export default defineConfig({
+  prefetch: {
+    prefetchAll: true,
+  },
   server: {
     port: SERVER_PORT,
   },
