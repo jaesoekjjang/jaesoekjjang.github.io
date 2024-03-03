@@ -1,5 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import Header from "./Header.astro";
+import "../main.css";
 ---
 
 <!doctype html>
@@ -12,21 +14,13 @@ import { ViewTransitions } from "astro:transitions";
       <slot name="meta" />
     </ViewTransitions>
   </head>
-  <body class="text-text-body bg-bg-body mx-auto">
-    <!-- <Header /> -->
-    <div class="main-wrapper h-[calc(100%-theme(space.16))]">
-      <main id="main">
-        <slot name="main" />
-      </main>
-    </div>
-    <style>
-      body {
-        min-height: 100vh;
-      }
-      .main-wrapper {
-        position: relative;
-        min-height: 100%;
-      }
-    </style>
+  <body class="text-[--text-body] relative">
+    <slot name="header">
+      <Header />
+    </slot>
+    <main class="max-w-6xl m-auto px-10">
+      <slot name="main" />
+    </main>
+    <style></style>
   </body>
 </html>

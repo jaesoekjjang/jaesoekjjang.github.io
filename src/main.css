@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --text-heading: theme("colors.gray.900");
+  --text-body: theme("colors.gray.700");
+
+  --border: theme("colors.gray.200");
+
+  --link: theme("colors.indigo.500");
+
+  --inline-code-bg: #f5f2f0;
+  --inline-code-text: #d23669;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-heading);
+}
+
+a {
+  color: var(--link);
+}
+
+a.unset {
+  text-decoration: none;
+  color: inherit;
+}

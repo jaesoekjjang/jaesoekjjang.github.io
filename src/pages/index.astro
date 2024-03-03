@@ -1,54 +1,47 @@
 ---
-import { getCollection } from "astro:content";
 import BaseLayout from "../components/BaseLayout.astro";
+import Image from "../components/Image.astro";
+import { getCollectionByDate } from "../lib/collection";
 
-const blogs = await getCollection("blogs");
-
-// const posts = await readAll({
-//   directory: "blog",
-//   frontmatterSchema: blog,
-// });
-
-// const sortedPosts = posts
-//   .filter((p) => p.frontmatter.draft !== true)
-//   .sort(
-//     (a, b) =>
-//       new Date(b.frontmatter.date).valueOf() -
-//       new Date(a.frontmatter.date).valueOf()
-//   );
+const blogs = await getCollectionByDate(
+  "blogs",
+  ({ data }) => data.draft !== true,
+).then((res) => res.slice(0, 3));
 ---
 
 <BaseLayout>
-  <div slot="main" class="max-w-6xl m-auto px-6">
+  <div slot="main">
     <div class="mt-8 mb-4">
-      <div class="text-lg border-b-[--border] border-b-[1px] pb-4">블로그</div>
-      <div class="flex h-[320px] gap-6 mt-5 max-h-60">
+      <div class="text-lg border-b-[--border] border-b-[1px] pb-4">
+        <a class="unset underline" href="/blogs">블로그</a>
+      </div>
+      <div
+        class="mt-4
+        flex flex-col justify-between md:flex-row gap-3
+        max-h-60 md:max-h-none"
+      >
         {
-          blogs
-            .slice(0, 3)
-            .map(({ data: { title, description, coverImage }, slug }) => (
-              <a class="unset" href={`/blogs/${slug}`}>
-                <div class=" bg-[--code-background] h-44 aspect-video mb-4">
-                  {coverImage ? (
-                    <img
-                      src={`/images/${coverImage}`}
-                      class="h-[100%] w-[100%] object-cover my-auto"
-                      alt={`${title}-cover-image`}
-                    />
-                  ) : null}
+          blogs.map(({ data: { title, description, coverImage }, slug }) => {
+            return (
+              <a class="unset w-[100%] md:w-1/3" href={`/blogs/${slug}`}>
+                <div
+                  class="md:h-48
+                  h-[340px] w-[100%] 
+                  mb-4
+                "
+                >
+                  <Image
+                    image={coverImage}
+                    className="h-60 md:h-[100%] w-[100%] object-cover my-auto"
+                  />
                   <div>
-                    <h4
-                      class="text-xl 
-                      font-medium
-                      mt-3 my-2"
-                    >
-                      {title}
-                    </h4>
+                    <h4 class="text-xl font-semibold mt-3 my-2">{title}</h4>
                     <p class="text-sm">{description}</p>
                   </div>
                 </div>
               </a>
-            ))
+            );
+          })
         }
       </div>
     </div>

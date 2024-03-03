@@ -1,0 +1,35 @@
+<article
+  class="prose
+    prose-h1:text-4xl prose-h1:font-semibold
+    prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-10 prose-h2:mb-5
+    prose-h3:text-xl prose-h3:font-semibold
+    prose-h4:text-lg prose-h4:font-semibold
+    prose-p:my-5
+    prose-a:text-[--link]
+    prose-img:rounded-sm
+    prose-pre:rounded-sm"
+>
+  <slot />
+</article>
+
+<style is:inline>
+  .prose {
+    p > code {
+      padding: 4px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, "Andale Mono", monospace;
+      color: var(--inline-code-text);
+      background-color: var(--inline-code-bg);
+      direction: ltr;
+      font-size: 14px;
+    }
+
+    p > code::before {
+      content: "";
+    }
+
+    p > code::after {
+      content: "";
+    }
+  }
+</style>

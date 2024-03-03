@@ -13,13 +13,11 @@ const blogs = defineCollection({
         url: z.string(),
         alt: z.string(),
       })
-      .optional(),
-    tag: z
-      .string()
       .optional()
-      .default("")
-      .or(z.string().array().optional().default([DEFAULT_TAG])),
+      .default({ url: "placeholder.svg", alt: "placeholder" }),
+    tags: z.string().array().optional().default([DEFAULT_TAG]),
     series: z.array(reference("blogs")).optional(),
+    draft: z.boolean().optional().default(false),
   }),
 });
 

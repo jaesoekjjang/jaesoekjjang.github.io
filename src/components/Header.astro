@@ -1,0 +1,18 @@
+---
+import HeaderLink from "./HeaderLink.astro";
+---
+
+<header
+  class="sticky top-0 h-114 border-b-[--border] border-b-[1px] bg-white opacity-[0.98] z-20"
+>
+  <div class="py-4 px-10 flex items-center justify-between flex-1 w-[100%]">
+    <div>
+      <a class="text-[--text-heading] text-lg" href="/">재석짱 블로그</a>
+    </div>
+    <nav>
+      <ul>
+        <li><HeaderLink href="/blogs">Blog</HeaderLink></li>
+      </ul>
+    </nav>
+  </div>
+</header>
