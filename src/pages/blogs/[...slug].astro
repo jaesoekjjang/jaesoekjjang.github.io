@@ -8,7 +8,7 @@ import { getEntries } from "astro:content";
 import Article from "../../components/Article.astro";
 import Image from "../../components/Image.astro";
 import Tag from "../../components/Tag.astro";
-import { sequence } from "astro:middleware";
+import BreadCrumbNav from "../../components/BreadCrumbNav";
 
 interface Props {
   entry: CollectionEntry<"blogs">;
@@ -37,13 +37,6 @@ const seriesEntries = series
   : [];
 
 const ogImageAbsoluteUrl = new URL(coverImage.url, SITE_URL).toString();
-
-const marginByDepth: Record<number, string> = {
-  1: "ml-0",
-  2: "ml-0",
-  3: "ml-4",
-  4: "ml-8",
-};
 ---
 
 <BaseLayout>
@@ -56,65 +49,54 @@ const marginByDepth: Record<number, string> = {
     slot="meta"
   />
   <div slot="main" class="max-w-[65ch] py-10 mx-auto">
-    <div class="relative">
-      <div class="px-5 mx-auto">
-        <Article>
-          <div>
-            <h1 class="mb-1">{title}</h1>
-            <p class="not-prose my-0 text-sm">
-              <time datetime={date}>{new Date(date).toLocaleDateString()}</time>
-            </p>
-          </div>
-          <div class="text-center">
-            <Image className="w-[80%] mx-auto" image={coverImage} />
-          </div>
-          <Content />
-        </Article>
+    <div class="px-5 mx-auto">
+      <Article>
         <div>
-          <h2 class="text-xl font-semibold mt-10 mb-5">태그</h2>
-          <ul class="flex gap-4">
-            {
-              tags.map((x) => (
-                <li>
-                  <Tag size="md" value={x} />
-                </li>
-              ))
-            }
-          </ul>
-          {
-            seriesEntries.length > 0 && (
-              <>
-                <h2 class="text-xl font-semibold mt-10 mb-5">시리즈</h2>
-                <ul class="grid-cols-2 gap-4">
-                  {seriesEntries.map((x) => (
-                    <li class="col-span-1">
-                      <Image image={x.data.coverImage} />
-                      <p>{x.data.title}</p>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )
-          }
+          <h1 class="mb-1">{title}</h1>
+          <p class="not-prose my-0 text-sm">
+            <time datetime={date}>{new Date(date).toLocaleDateString()}</time>
+          </p>
         </div>
+        <div class="text-center">
+          <Image className="w-[80%] mx-auto" image={coverImage} />
+          <figcaption class="text-sm">{coverImage.caption}</figcaption>
+        </div>
+        <Content />
+      </Article>
+      <div>
+        <h2 class="text-xl font-semibold mt-10 mb-5">태그</h2>
+        <ul class="flex flex-wrap gap-4">
+          {
+            tags.map((x) => (
+              <li>
+                <Tag size="md" value={x} />
+              </li>
+            ))
+          }
+        </ul>
+        {
+          seriesEntries.length > 0 && (
+            <>
+              <h2 class="text-xl font-semibold mt-10 mb-5">시리즈</h2>
+              <ul class="grid-cols-2 gap-4">
+                {seriesEntries.map((x) => (
+                  <li class="col-span-1">
+                    <Image image={x.data.coverImage} />
+                    <p>{x.data.title}</p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )
+        }
       </div>
-      <aside class="fixed top-[112px] right-40 hidden md:block">
-        <nav class="pt-3 w-60 px-5">
-          <ul class="text-gray-600">
-            {
-              headings.map(({ depth, slug, text }) => (
-                <li
-                  class:list={[marginByDepth[depth], "py-[6px] pl-4 text-sm"]}
-                >
-                  <a class="unset" href={`#${slug}`}>
-                    {text}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </nav>
-      </aside>
     </div>
+    <aside
+      class="fixed top-[112px]
+          right-[calc(50%-37rem)]
+          hidden lg:block"
+    >
+      <BreadCrumbNav headings={headings} client:only />
+    </aside>
   </div>
 </BaseLayout>

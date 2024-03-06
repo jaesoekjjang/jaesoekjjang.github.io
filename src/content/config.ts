@@ -12,6 +12,7 @@ const blogs = defineCollection({
       .object({
         url: z.string(),
         alt: z.string(),
+        caption: z.string().optional(),
       })
       .optional()
       .default({ url: "placeholder.svg", alt: "placeholder" }),

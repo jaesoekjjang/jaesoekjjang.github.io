@@ -12,11 +12,11 @@ const blogs = await getCollectionByDate(
 <BaseLayout>
   <div slot="main">
     <div class="mt-8 mb-4">
-      <div class="text-lg border-b-[--border] border-b-[1px] pb-4">
-        <a class="unset underline" href="/blogs">블로그</a>
+      <div class="border-b-[--border] border-b-[1px] pb-2 text-black">
+        최신 글
       </div>
       <div
-        class="mt-4
+        class="mt-5
         flex flex-col justify-between md:flex-row gap-3
         max-h-60 md:max-h-none"
       >
@@ -32,11 +32,16 @@ const blogs = await getCollectionByDate(
                 >
                   <Image
                     image={coverImage}
-                    className="h-60 md:h-[100%] w-[100%] object-cover my-auto"
+                    className="my-auto h-60 md:h-[100%] w-[100%] object-cover"
                   />
                   <div>
                     <h4 class="text-xl font-semibold mt-3 my-2">{title}</h4>
                     <p class="text-sm">{description}</p>
+                    <p>
+                      <time class="text-xs mt-2" datetime="2021-10-10">
+                        2021-10-10
+                      </time>
+                    </p>
                   </div>
                 </div>
               </a>

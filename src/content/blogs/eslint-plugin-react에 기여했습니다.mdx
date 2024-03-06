@@ -5,7 +5,13 @@ date: 2023-02-20
 tags:
   - Open Source
   - ESLint
-coverImage: { url: eslint-plugin-react.png, alt: "eslint-plugin-react" }
+  - Checked Requires Onchange Or Readonly
+coverImage:
+  {
+    url: checked-requires-onchange-or-readonly-rule-on-npm.png,
+    alt: "checked-requires-onchange-or-readonly-rule-on-npm-docs",
+    caption: "npm에 추가되었다!",
+  }
 series:
   - 커스텀-eslint-plugin-만들기
 ---
@@ -15,7 +21,7 @@ import commentImage from "../../assets/eslint-plugin-react-comment.png";
 
 ## 새로운 규칙으로 등록되다!
 
-와~~ 지난 달 제가 작성한 eslint-plugin-react 규칙이 드디어 머지되었습니다. 대단한 코드는 아니지만, 지난 번에 Jotai에 기여한 것에 비해 훨씬 많은 줄의 코드와 기능을 추가해서 그런지 개인적으로 너무 뿌듯하고 자랑하고싶어 블로그를 켰습니다😏. 제가 추가한 규칙은 `checked-requires-onchange-or-readonly`라는 긴 이름의 규칙으로, [README](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/checked-requires-onchange-or-readonly.md)에도 설명되어있듯 다음 두 가지 항목을 따를 것을 강요합니다.
+와~~ 지난 달 제가 작성한 eslint-plugin-react 규칙이 드디어 배포되었습니다. 대단한 코드는 아니지만, 지난 번에 Jotai에 기여한 것에 비해 훨씬 많은 줄의 코드와 기능을 추가해서 그런지 개인적으로 너무 뿌듯하고 자랑하고싶어 블로그를 켰습니다😏. 제가 추가한 규칙은 `checked-requires-onchange-or-readonly`라는 긴 이름의 규칙으로, [README](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/checked-requires-onchange-or-readonly.md)에도 설명되어있듯 다음 두 가지 항목을 따를 것을 강요합니다.
 
 - `input` 컴포넌트에 `checked` 속성이 쓰였다면, `onChange` 또는 `readOnly` 속성 중 하나를 반드시 사용할 것.
 

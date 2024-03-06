@@ -23,11 +23,11 @@ h6 {
   color: var(--text-heading);
 }
 
-a {
+a:not(.unset) {
   color: var(--link);
+  text-decoration: none;
 }
 
-a.unset {
-  text-decoration: none;
-  color: inherit;
+a:not(.unset):hover {
+  text-decoration: underline;
 }
