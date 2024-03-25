@@ -1,0 +1,498 @@
+---
+title: "커스텀 eslint plugin 만들기"
+description: "커스텀 eslint 규칙을 만들어보고, checked-requires-onchange-or-readonly을 어떻게 구성했는지 알아봅니다."
+date: 2023-03-04
+tags:
+  - ESLint
+  - Custom ESLint Plugin
+  - ESLint Plugin React
+  - Checked Requires Onchange Or Readonly
+coverImage: { url: eslint-logo.png, alt: "eslint-logo" }
+series:
+  - eslint-plugin-react에-기여했습니다
+---
+
+import { Image } from "astro:assets";
+import AstVisualizedImage from "../../assets/ast-visualization.png";
+import EslintAppleExec from "../../assets/eslint-plugin-apple-exec.png";
+
+`checked-requires-onchange-or-readonly` 규칙과 함께 커스텀 ESlint 플러그인을 어떻게 만들 수 있는지 알아보겠습니다.
+
+## AST(Abstract Syntax Tree)
+
+먼저 AST라는 것에 대해 알 필요가 있습니다.
+AST, 추상 구문 트리는 쉽게 말해 코드의 단위 하나 하나를 노드로 만들어 간단한 트리 형태의 데이터 구조로 나타낸 것입니다.
+
+예를 들어, 아래 코드를
+
+```javascript
+const apple = "delicious";
+```
+
+Espree라는 parser로 변환 한 AST로 나타내면 다음과 같습니다.
+
+```json
+{
+  "type": "Program",
+  "start": 0,
+  "end": 26,
+  "range": [0, 26],
+  "body": [
+    {
+      "type": "VariableDeclaration",
+      "start": 0,
+      "end": 26,
+      "range": [0, 26],
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "start": 6,
+          "end": 25,
+          "range": [6, 25],
+          "id": {
+            "type": "Identifier",
+            "start": 6,
+            "end": 11,
+            "range": [6, 11],
+            "name": "apple"
+          },
+          "init": {
+            "type": "Literal",
+            "start": 14,
+            "end": 25,
+            "range": [14, 25],
+            "value": "delicious",
+            "raw": "'delicious'"
+          }
+        }
+      ],
+      "kind": "const"
+    }
+  ],
+  "sourceType": "module"
+}
+```
+
+뭔가 복잡해보이죠? `type`이라는 키를 위주로 살펴보면 대충 이해할 수 있습니다.
+
+- 프로그램 안에 `const` 변수 선언이 있고
+- `apple`이라는 식별자에
+- 'delicious' 라는 문자열이 할당되었다
+
+시각화하면 다음과 같습니다.
+
+<div className="flex flex-col items-center">
+  <Image src={AstVisualizedImage} alt="ast 시각화" />
+  <figcaption class="text-sm">eslint 오류가 잘 나타난다</figcaption>
+</div>
+
+https://astexplorer.net/ 에서 코드를 붙여넣으면 다양한 parser를 사용해 소스코드를 AST로 변환해볼 수 있으니 한 번 아무 코드나 넣어 확인해보세요.
+여러 parser들 중 ESLint는 Espree라는 parser를 기본적으로 사용하고 있다고 합니다. 외에도 Esprisma와 같은 파서를 사용하거나 [ESTree](https://github.com/estree/estree)의 명세를 따르는 AST를 반환하는 [커스텀 parser](https://eslint.org/docs/latest/extend/custom-parsers)를 사용할 수도 있습니다.
+혹시나 저만의 자바스크립트 문법을 만들어볼 일이 있으면 커스텀 parser를 함께 올려보겠습니다.
+
+아무튼 이렇게 파싱이 완료되면 ESLint는 AST를 돌며 규칙들을 린팅합니다.
+
+## 커스텀 플러그인 만들어보기
+
+한 번 규칙을 만들어볼까요? ESLint 공식 홈페이지의 예제를 살짝 변경해서, `const apple = `에 'apple'이 아닌 값이 오면, 오류를 발생시키고 이를 'apple'로 수정하는 규칙을 만들어보겠습니다.
+
+### 규칙 만들기
+
+플러그인에는 여러 규칙이 담길 수 있으며, 각 규칙은 다음과 같이 `meta`, `create()`를 갖는 객체 구조를 갖습니다.
+
+```javascript
+// apple-must-be-assigned-apple.js
+module.exports = {
+  // meta 정보는 이 곳에
+  meta: {
+    type: "problem",
+    docs: {
+      description: 'enforce `const apple to be assigned "apple"`',
+    },
+    fixable: "code",
+  },
+  // 주요 로직은 create() 메서드 내에 작성
+  create(context) {
+    return {
+      VariableDeclarator(node) {
+        // const 변수 선언 노드 중
+        if (node.parent.kind === "const") {
+          // 식별자 이름이 apple이고
+          if (node.id.type === "Identifier" && node.id.name === "apple") {
+            // 초기화 값이 "apple"이 아니라면
+            if (
+              node.init &&
+              node.init.type === "Literal" &&
+              node.init.value !== "apple"
+            ) {
+              // 오류를 보고하고 수정
+              context.report({
+                node,
+                message: "const apple must be assigned 'apple'",
+                fix(fixer) {
+                  return fixer.replaceText(node.init, '"apple"');
+                },
+              });
+            }
+          }
+        }
+      },
+    };
+  },
+};
+```
+
+`meta` 속성은 이 규칙의 종류(에러를 일으킬 수 있는 문제인지, 권장사항인지 등), 설명, 수정 가능 여부 등을 담을 수 있는 객체입니다.
+
+`create()`는 규칙의 핵심 로직을 담은 메서드로, AST 노드의 `type`들을 키로 갖는 객체를 반환해야 합니다. 그럼 ESLint는 AST를 순회하며 해당 노드 타입을 만나면 해당 메서드를 호출합니다. 인자에는 해당 노드에 대한 정보가 있는 `context` 객체가 담겨오며, 우리는 이를 이용해 노드의 타입, 소스코드 등을 확인하고 오류를 보고(`.report()`)할 수 있습니다.
+
+아까 AST에서 보았던 `VariableDeclarator`가 메서드 이름으로 들어가 있죠? 이는 `VariableDeclarator` 노드, 즉 변수 선언 노드를 만나면 해당 메서드를 호출하라는 뜻입니다. 우리는 `apple`이라는 상수를 선언할 때를 찾아내야 하므로 여기에 로직을 작성하면 됩니다.
+
+내용은 너무나 간단해서 코드와 주석으로 이해되시리라 생각합니다. Rule 객체에 대해 더 자세히 알고싶으시다면 ESLint [Rule Structure](https://eslint.org/docs/latest/extend/custom-rules#rule-structure) 문서를 참고하시길 바랍니다.
+
+### 테스트 코드
+
+이제 테스트 코드를 작성해볼텐데요, ESLint에서는 테스트를 위한 `RuleTester`를 제공합니다. `RuleTester`에는 `valid`, `invalid` 속성을 갖는 객체를 전달하며, `valid`에는 규칙이 정상적으로 동작할 때의 코드, `invalid`에는 규칙이 오류를 발생시킬 때의 코드를 넣습니다.
+
+`valid`의 코드가 린트 오류를 발생시키거나, `invalid`의 코드가 린트 오류를 발생시키지 않는다면 테스트는 실패하며 에러를 던집니다.
+
+```javascript
+// apple-must-be-assigned-apple.test.js
+const { RuleTester } = require("eslint");
+const appleRule = require("./apple-must-be-assigned-apple");
+
+const ruleTester = new RuleTester({
+  parserOptions: { ecmaVersion: 2015 },
+});
+
+// 테스트에 실패하면 에러를 throw
+ruleTester.run("apple-must-be-assigned-apple", appleRule, {
+  valid: [
+    {
+      code: "const apple = 'apple';",
+      code: "const apple = 'Apple';",
+    },
+  ],
+  invalid: [
+    {
+      code: "const apple = 'banana';",
+      output: 'const apple = "apple";', // banana를 apple로 수정
+      errors: 1, // 에러가 1개 발생
+    },
+  ],
+});
+```
+
+에러 없이 잘 동작한다면 규칙을 하나 완성한 것입니다.
+
+### plugin으로 만들기
+
+이제 이 규칙을 다른 곳에서도 사용할 수 있도록 플러그인으로 만들어보겠습니다.
+
+```javascript
+// eslint-plugin-apple.js
+const rules = {
+  "apple-must-be-assigned-apple": require("./apple-must-be-assigned-apple"),
+};
+module.exports = {
+  rules,
+  // config, processor 등 추가로 필요한 속성이 있다면 함께 추가
+};
+```
+
+로컬에서는 다음과 같이 설정 파일에 추가하면 됩니다.
+
+```javascript
+// eslint.config.js
+const applePlugin = require("./eslint-plugin-apple.js");
+
+module.exports = [
+  {
+    plugins: {
+      apple: applePlugin,
+    },
+    rules: {
+      "apple/apple-must-be-assigned-apple": "error",
+    },
+  },
+];
+```
+
+로컬 프로젝트에서 받아서 우리가 만든 규칙이 정말로 잘 동작하는지 눈으로 확인해봅시다.
+
+<Image src={EslintAppleExec} alt="eslint-터미널-오류" />
+<figcaption class="text-sm text-center">eslint 오류가 잘 나타난다</figcaption>
+
+### npm 배포
+
+npm에 배포하기 위해서는 `package.json`에 반드시 `eslint-plugin-`의 컨벤션을 따라 고유한 `name`을 정해주어야 합니다. 그리고 `main` 필드에는 plugin의 상대 경로를, `peerDependencies`에는 `eslint`를 추가해야 합니다.
+
+```json
+{
+  "name": "eslint-plugin-apple",
+  "version": "1.0.0",
+  "main": "eslint-plugin-apple.js",
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  },
+  "keywords": ["eslint", "eslintplugin", "eslint-plugin"]
+}
+```
+
+컨벤션을 잘 따랐다면, 다른 프로젝트에서는 프로젝트 이름 만으로 plugin을 쉽게 설정 파일에 넣을 수 있습니다.
+
+```json
+{
+  "plugins": ["apple"],
+  "rules": {
+    "apple/apple-must-be-assigned-apple": "error"
+  }
+}
+```
+
+[yo](https://www.npmjs.com/package/yo),
+[generator-eslint](https://www.npmjs.com/package/generator-eslint) 패키지를 사용하면 다른 플러그인들과 같은 구조로 쉽게 스캐폴딩할 수 있으니 사용해보셔도 좋을 것 같습니다.
+
+## checked-requires-onchange-or-readonly 규칙 살펴보기
+
+이제 제가 추가한 `checked-requires-onchange-or-readonly` 규칙을 한 번 볼텐데요, 이 규칙은 리액트의 `input`에 `checked` 속성이 사용되면,
+
+- `onChange`나 `readOnly` 속성 중 하나가 존재해야 하며
+- `defaultChecked`가 함께 사용되어서는 안된다는 규칙입니다.
+
+### eslint-plugin-react
+
+규칙은 eslint-plugin-react 플러그인에 추가되어 있습니다. eslint-plugin-react는 코어 eslint 룰과는 다르게 리액트에 특화된 규칙을 제공합니다. 기본적으로 javascript 만을 지원하는 eslint에 jsx를 지원하게끔 만들어진 플러그인이라고 보시면 됩니다.
+그렇지만 코어 룰과 [기본적인 구조](https://eslint.org/docs/latest/contribute/core-rules)는 같습니다.
+
+즉, 아래 디렉터리들에 새로운 규칙에 관한 내용을 추가해주기만 하면 됩니다.
+
+- `lib/rules`
+- `tests/lib/rules`
+- `docs/rules`
+
+### Rule
+
+`lib/rules/checked-requires-onchange-or-readonly.js`의 코드입니다.
+
+```javascript
+// ... imports ASTUtils, isCreateElement, report, docsUrl, flatMap
+
+const messages = {
+  missingProperty:
+    "`checked` should be used with either `onChange` or `readOnly`.",
+  exclusiveCheckedAttribute:
+    "Use either `checked` or `defaultChecked`, but not both.",
+};
+
+const targetPropSet = new Set([
+  "checked",
+  "onChange",
+  "readOnly",
+  "defaultChecked",
+]);
+
+const defaultOptions = {
+  ignoreMissingProperties: false, // onChange나 readOnly가 없는 경우 오류 무시
+  ignoreExclusiveCheckedAttribute: false, // checked와 defaultChecked가 같이 있는 경우 오류 무시
+};
+
+// targetPropSet에 해당하는 속성들만 Set으로 추출
+function extractTargetProps(properties, keyName) {
+  return new Set(
+    flatMap(properties, (prop) =>
+      prop[keyName] && targetPropSet.has(prop[keyName].name)
+        ? [prop[keyName].name]
+        : [],
+    ),
+  );
+}
+
+module.exports = {
+  meta: {
+    docs: {
+      // ...
+    },
+    messages,
+    schema: [
+      {
+        additionalProperties: false,
+        /**
+         * @description rule 옵션을 스키마로 정의
+         * @example 'react/checked-requires-onchange-or-readonly': ['error', { ignoreMissingProperties: true, ignoreExclusiveCheckedAttribute: true }]
+         */
+        properties: {
+          ignoreMissingProperties: {
+            type: "boolean",
+          },
+          ignoreExclusiveCheckedAttribute: {
+            type: "boolean",
+          },
+        },
+      },
+    ],
+  },
+  create(context) {
+    const options = Object.assign({}, defaultOptions, context.options[0]);
+
+    function reportMissingProperty(node) {
+      report(
+        context,
+        messages.missingProperty,
+        "missingProperty", // messageId로 사용되어 test에서 사용
+        { node },
+      );
+    }
+
+    function reportExclusiveCheckedAttribute(node) {
+      report(
+        context,
+        messages.exclusiveCheckedAttribute,
+        "exclusiveCheckedAttribute",
+        { node },
+      );
+    }
+
+    const checkAttributesAndReport = (node, propSet) => {
+      if (!propSet.has("checked")) {
+        return;
+      }
+
+      if (
+        !options.ignoreExclusiveCheckedAttribute &&
+        propSet.has("defaultChecked")
+      ) {
+        reportExclusiveCheckedAttribute(node);
+      }
+
+      if (
+        !options.ignoreMissingProperties &&
+        !(propSet.has("onChange") || propSet.has("readOnly"))
+      ) {
+        reportMissingProperty(node);
+      }
+    };
+
+    return {
+      // jsx일 때
+      JSXOpeningElement(node) {
+        if (ASTUtils.elementType(node) !== "input") {
+          return;
+        }
+
+        const propSet = extractTargetProps(node.attributes, "name");
+        checkAttributesAndReport(node, propSet);
+      },
+      // createElement()를 호출했을 때
+      CallExpression(node) {
+        if (!isCreateElement(node, context)) {
+          return;
+        }
+
+        const firstArg = node.arguments[0];
+        const secondArg = node.arguments[1];
+        if (
+          !firstArg ||
+          firstArg.type !== "Literal" ||
+          firstArg.value !== "input"
+        ) {
+          return;
+        }
+
+        if (!secondArg || secondArg.type !== "ObjectExpression") {
+          return;
+        }
+
+        const propSet = extractTargetProps(secondArg.properties, "key");
+        checkAttributesAndReport(node, propSet);
+      },
+    };
+  },
+};
+```
+
+구조는 앞서 작성한 apple 규칙과 유사해서 금방 이해되셨을겁니다. 리액트 Input 엘리먼트를 만들기 위해 JSX나 `createElement()`를 사용할 수 있으므로 두 가지 경우를 고려하고, `input` 태그인 경우에 대해서만 규칙을 적용하도록 했습니다.
+
+이 중 검사해야 할 키들을 `extractTargetProps()` 함수를 사용해 모두 set으로 가져오고, `checkAttributesAndReport()` 함수를 사용해 오류를 보고하도록 합니다. eslint-plugin-react에서는 사전 정의된 `report()` 함수가 있으므로 이 함수를 사용해서 오류를 보고하도록 했습니다.
+
+### Test
+
+테스트 코드도 마찬가지로 apple 규칙과 유사한데요, 여기서는 앞서 규칙에서 지정해준 `messageId`를 사용해 에러를 특정했습니다.
+
+```javascript
+ruleTester.run("checked-requires-onchange-or-readonly", rule, {
+  valid: parsers.all([
+    '<input type="checkbox" />',
+    '<input type="checkbox" onChange={noop} />',
+    '<input type="checkbox" readOnly />',
+    "React.createElement('input', { checked: foo, onChange: noop, readOnly: true })",
+    {
+      code: '<input type="checkbox" checked />',
+      options: [{ ignoreMissingProperties: true }], // onChange나 readOnly가 없어도 통과
+    },
+    {
+      code: '<input type="checkbox" onChange={noop} checked defaultChecked />',
+      options: [{ ignoreExclusiveCheckedAttribute: true }], // checked와 defaultChecked가 같이 있어도 통과
+    },
+    // ...
+  ]),
+  invalid: parsers.all([
+    // ...
+    {
+      code: '<input type="checkbox" checked defaultChecked />',
+      options: [
+        {
+          ignoreMissingProperties: false,
+          ignoreExclusiveCheckedAttribute: false,
+        },
+      ],
+      errors: [
+        { messageId: "exclusiveCheckedAttribute" },
+        { messageId: "missingProperty" },
+      ],
+    },
+  ]),
+});
+```
+
+테스트 코드를 작성할 때는 모든 상황에서 코드가 의도대로 동작하는지 확인하기 위해 커버리지를 높이고 꼼꼼하게 여러 케이스를 작성하도록 합니다.
+
+그런데, 커버리지보다 중요한 것은 의도를 명확하게 나타내어 구현 과정에서 **휴먼 에러**를 방지하는 것이라는 것을 이번에 알았습니다. 테스트 코드를 모두 통과해도 완전히 잘못된 코드가 될 수도 있더라구요!
+
+## 버그 이슈가 올라오다
+
+어느 날 옵션들이 [반대로 동작한다는 이슈](https://github.com/jsx-eslint/eslint-plugin-react/issues/3711)가 올라왔습니다. 엥? 테스트 코드를 모두 통과했는데 잘못된게 있었다고? 그렇습니다. 코드를 반대로 짰을 뿐만 아니라, **테스트 코드 역시 반대** 동작을 테스트하도록 해버린 것입니다.
+
+저는 최초에 `ignoreMissingProperties`와 `ignoreExclusiveCheckedAttribute`가 `true`이면, 해당 옵션을 무시하도록 구현하려 했는데, 이게 영어에 부정형이라 헷갈렸는지 실제로는 `true`일 때 옵션을 강제하도록 구현해버렸습니다.
+메인테이너 조차 인지하지 못하고 깜빡 속을 정도였습니다😂
+
+테스트에서도 예를 들면 이런 식으로 반대로 테스트 해버린거죠.
+
+```javascript
+{
+  invalid: parse.all[
+    {
+      code: '<input type="checkbox" checked defaultChecked />',
+      options: [
+        {
+          ignoreMissingProperties: true,
+          ignoreExclusiveCheckedAttribute: true,
+        },
+      ],
+      errors: [
+        { messageId: "exclusiveCheckedAttribute" },
+        { messageId: "missingProperty" },
+      ],
+    }
+  ];
+}
+```
+
+퇴근 후 놀고있었는데, 이메일로 알림이 잔뜩 와있는걸 보고 그 자리에서 노트북을 꺼내 다시 수정해 올렸습니다.
+
+## 마무리
+
+간단한 예시와 제가 만든 규칙을 함께 보며, ESLint의 커스텀 규칙 및 플러그인을 만드는 방법을 알아보았습니다.
+규칙을 직접 만들어보고, 설명하기 위해 ESLint에 대해 공부하는 동안 ESLint의 동작 원리를 이해할 수 있었고, 실수도 해보며 많은 것을 배울 수 있었던 굉장히 좋은 기회였던 것 같습니다.
+
+이 글을 통해 커스텀 규칙을 만드는 법을 새로 알게되신 분들도 직접 만들어보시고, 좋은 규칙이 있으면 공유해주시면 좋을 것 같습니다.

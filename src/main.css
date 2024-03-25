@@ -10,8 +10,8 @@
 
   --link: theme("colors.indigo.500");
 
-  --inline-code-bg: #f5f2f0;
-  --inline-code-text: #d23669;
+  --inline-code-bg: #F2F2F2;
+  --inline-code-text: #242424;
 }
 
 h1,
@@ -24,10 +24,10 @@ h6 {
 }
 
 a:not(.unset) {
-  color: var(--link);
   text-decoration: none;
+  border-bottom: 1px solid var(--link);
 }
 
 a:not(.unset):hover {
-  text-decoration: underline;
+  border-bottom-width: 2px;
 }

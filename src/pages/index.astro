@@ -3,10 +3,7 @@ import BaseLayout from "../components/BaseLayout.astro";
 import Image from "../components/Image.astro";
 import { getCollectionByDate } from "../lib/collection";
 
-const blogs = await getCollectionByDate(
-  "blogs",
-  ({ data }) => data.draft !== true,
-).then((res) => res.slice(0, 3));
+const blogs = await getCollectionByDate("blogs").then((res) => res.slice(0, 3));
 ---
 
 <BaseLayout>
@@ -21,32 +18,34 @@ const blogs = await getCollectionByDate(
         max-h-60 md:max-h-none"
       >
         {
-          blogs.map(({ data: { title, description, coverImage }, slug }) => {
-            return (
-              <a class="unset w-[100%] md:w-1/3" href={`/blogs/${slug}`}>
-                <div
-                  class="md:h-48
+          blogs.map(
+            ({ data: { title, description, coverImage, date }, slug }) => {
+              return (
+                <a class="unset w-[100%] md:w-1/3" href={`/blogs/${slug}`}>
+                  <div
+                    class="md:h-48
                   h-[340px] w-[100%] 
                   mb-4
                 "
-                >
-                  <Image
-                    image={coverImage}
-                    className="my-auto h-60 md:h-[100%] w-[100%] object-cover"
-                  />
-                  <div>
-                    <h4 class="text-xl font-semibold mt-3 my-2">{title}</h4>
-                    <p class="text-sm">{description}</p>
-                    <p>
-                      <time class="text-xs mt-2" datetime="2021-10-10">
-                        2021-10-10
-                      </time>
-                    </p>
+                  >
+                    <Image
+                      image={coverImage}
+                      className="my-auto h-60 md:h-[100%] w-[100%] object-cover"
+                    />
+                    <div>
+                      <h4 class="text-xl font-semibold mt-3 my-2">{title}</h4>
+                      <p class="text-sm">{description}</p>
+                      <p>
+                        <time class="text-xs mt-2" datetime="2021-10-10">
+                          {date}
+                        </time>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </a>
-            );
-          })
+                </a>
+              );
+            },
+          )
         }
       </div>
     </div>

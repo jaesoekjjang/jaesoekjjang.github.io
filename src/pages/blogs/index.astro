@@ -3,10 +3,7 @@ import Image from "../../components/Image.astro";
 import BaseLayout from "../../components/BaseLayout.astro";
 import { getCollectionByDate } from "../../lib/collection";
 
-const blogs = await getCollectionByDate(
-  "blogs",
-  ({ data }) => data.draft !== true,
-);
+const blogs = await getCollectionByDate("blogs");
 ---
 
 <BaseLayout>

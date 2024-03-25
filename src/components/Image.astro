@@ -2,7 +2,7 @@
 import { Image as AstroImage } from "astro:assets";
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
-  "/src/assets/*.{jpg,jpeg,png,gif,webp,svg}",
+  "/src/assets/*.{jpg,jpeg,png,gif,webp,svg}"
 );
 
 type Props = {
@@ -11,14 +11,20 @@ type Props = {
     alt: string;
   };
   className?: string;
-};
+} & Omit<Parameters<typeof AstroImage>[0], "class" | "src" | "alt">;
 
 const {
   props: {
     className,
     image: { url, alt },
+    ...rest
   },
 } = Astro;
 ---
 
-<AstroImage class={className} src={images[`/src/assets/${url}`]()} alt={alt} />
+<AstroImage
+  class={className}
+  src={images[`/src/assets/${url}`]()}
+  alt={alt}
+  {...rest}
+/>

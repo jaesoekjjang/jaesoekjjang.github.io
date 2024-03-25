@@ -14,21 +14,24 @@
 
 <style is:inline>
   .prose {
-    p > code {
-      padding: 4px;
-      border-radius: 4px;
+    code {
       font-family: Consolas, Monaco, "Andale Mono", monospace;
-      color: var(--inline-code-text);
-      background-color: var(--inline-code-bg);
-      direction: ltr;
-      font-size: 14px;
+      font-size: 0.75rem;
+      font-weight: 400;
     }
 
-    p > code::before {
+    code:not(pre > code) {
+      padding: 4px;
+      border-radius: 4px;
+      background-color: var(--inline-code-bg);
+      color: var(--inline-code-text);
+    }
+
+    code::before {
       content: "";
     }
 
-    p > code::after {
+    code::after {
       content: "";
     }
 

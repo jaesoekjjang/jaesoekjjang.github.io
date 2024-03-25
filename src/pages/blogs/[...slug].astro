@@ -32,9 +32,7 @@ const {
 } = Astro.props;
 const { Content, headings } = await render();
 
-const seriesEntries = series
-  ? (await getEntries(series)).filter((x) => !x.data.draft)
-  : [];
+const seriesEntries = series ? await getEntries(series) : [];
 
 const ogImageAbsoluteUrl = new URL(coverImage.url, SITE_URL).toString();
 ---
@@ -74,21 +72,21 @@ const ogImageAbsoluteUrl = new URL(coverImage.url, SITE_URL).toString();
             ))
           }
         </ul>
-        {
+        <!-- TODO {
           seriesEntries.length > 0 && (
             <>
               <h2 class="text-xl font-semibold mt-10 mb-5">시리즈</h2>
               <ul class="grid-cols-2 gap-4">
                 {seriesEntries.map((x) => (
                   <li class="col-span-1">
-                    <Image image={x.data.coverImage} />
+                    <Image image={x.data.coverImage} width="324" height="162" />
                     <p>{x.data.title}</p>
                   </li>
                 ))}
               </ul>
             </>
           )
-        }
+        } -->
       </div>
     </div>
     <aside
